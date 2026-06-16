@@ -1,0 +1,71 @@
+{
+  "tituloHero": "Trendy Store",
+  "subtituloHero": "Tu boutique de ropa, calzado, accesorios y tecnología. Explora nuestro catálogo y ordena fácil por WhatsApp.",
+  "whatsapp": "50497075303",
+  "facebook": "https://facebook.com/trendystoreolanchito",
+  "instagram": "https://instagram.com/trendystoreolanchito",
+  "seoDescription": "Trendy Store — El mejor catálogo digital de ropa, calzado, accesorios y tecnología. Envío a todo el país y pedidos por WhatsApp.",
+  "puntosVenta": [
+    {
+      "nombre": "Sucursal Principal — Centro Comercial",
+      "direccion": "Plaza Principal, Local 12. Olanchito, Yoro, Honduras.",
+      "mapsUrl": "https://maps.app.goo.gl/jz5j8AEJ7c5gn8cB6"
+    },
+    {
+      "nombre": "Boutique Zona Norte",
+      "direccion": "Avenida Valle, frente a Parque Central, Olanchito, Yoro, Honduras.",
+      "mapsUrl": "https://maps.app.goo.gl/6aWY9YBqYqKHx3xg7"
+    }
+  ],
+  "productos": [
+    {
+      "nombre": "Tenis Deportivos Urban Pro",
+      "precio": "Lps. 1,200",
+      "imagen": "/images/tenis_urban_pro.png",
+      "disponible_hoy": true,
+      "categoria": "🔥 ¡Lo Más Vendido!"
+    },
+    {
+      "nombre": "Smartwatch Serie 9 Pro",
+      "precio": "Lps. 850",
+      "imagen": "/images/smartwatch_9_pro.png",
+      "disponible_hoy": true,
+      "categoria": "🔥 ¡Lo Más Vendido!"
+    },
+    {
+      "nombre": "Gorra Deportiva Ajustable",
+      "precio": "Lps. 300",
+      "imagen": "/images/gorra_deportiva.png",
+      "disponible_hoy": true,
+      "categoria": "🔥 ¡Lo Más Vendido!"
+    },
+    {
+      "nombre": "Camiseta Algodón Premium",
+      "precio": "Lps. 350",
+      "imagen": "/images/camiseta_premium.png",
+      "disponible_hoy": true,
+      "categoria": "✨ Catálogo Completo"
+    },
+    {
+      "nombre": "Jeans Slim Fit Caballero",
+      "precio": "Lps. 750",
+      "imagen": "/images/jeans_slim_fit.png",
+      "disponible_hoy": true,
+      "categoria": "✨ Catálogo Completo"
+    },
+    {
+      "nombre": "Gafas de Sol Polarizadas",
+      "precio": "Lps. 450",
+      "imagen": "/images/gafas_polarizadas.png",
+      "disponible_hoy": true,
+      "categoria": "✨ Catálogo Completo"
+    },
+    {
+      "nombre": "Mochila Impermeable Inteligente",
+      "precio": "Lps. 900",
+      "imagen": "/images/mochila_inteligente.png",
+      "disponible_hoy": true,
+      "categoria": "✨ Catálogo Completo"
+    }
+  ]
+}

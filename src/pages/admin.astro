@@ -1,0 +1,28 @@
+---
+/**
+ * Admin Page — Tina CMS
+ *
+ * Esta página redirige al panel de administración de Tina CMS
+ * que se genera automáticamente en /admin/index.html por el CLI.
+ *
+ * Accede directamente a: http://localhost:4321/admin/index.html
+ *
+ * Si deseas una ruta más limpia, esta página hace redirect.
+ */
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="refresh" content="0;url=/admin/index.html" />
+    <title>Redirigiendo al Admin...</title>
+  </head>
+  <body>
+    <p>Redirigiendo al panel de administración...</p>
+    <script>
+      window.location.href = "/admin/index.html";
+    </script>
+  </body>
+</html>

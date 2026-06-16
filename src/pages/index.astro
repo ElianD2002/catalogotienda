@@ -1,0 +1,578 @@
+---
+import "../styles/global.css";
+import menuData from "../../content/landing/menu.json";
+
+// ── Tipado del producto ──
+interface Producto {
+  nombre: string;
+  precio: string;
+  imagen?: string;
+  disponible_hoy: boolean;
+  categoria: string;
+}
+
+interface PuntoVenta {
+  nombre: string;
+  direccion: string;
+  mapsUrl: string;
+}
+
+// ── Datos del menú y configuración ──
+const tituloHero: string = menuData.tituloHero;
+const subtituloHero: string = menuData.subtituloHero || "Tradición familiar en cada bocado. Directo de Olanchito, Honduras.";
+const rawWhatsapp: string = menuData.whatsapp || "50499998888";
+// Limpiar el número de WhatsApp: eliminar guiones, espacios y otros caracteres que no sean dígitos.
+// Si el número tiene 8 dígitos (ej: 97075303), se le antepone el código de país 504.
+let whatsapp: string = rawWhatsapp.replace(/\D/g, "");
+if (whatsapp.length === 8) {
+  whatsapp = "504" + whatsapp;
+}
+const facebook: string = menuData.facebook || "#";
+const instagram: string = menuData.instagram || "#";
+const seoDescription: string = menuData.seoDescription || "Los mejores chicharrones y asados de Olanchito, Honduras.";
+const puntosVenta: PuntoVenta[] = menuData.puntosVenta || [];
+const productos: Producto[] = menuData.productos || [];
+
+// ── Filtros de productos ──
+const masVendido = productos.filter(
+  (p) => p.categoria === "🔥 ¡Lo Más Vendido!" && p.disponible_hoy
+);
+const catalogoCompleto = productos.filter(
+  (p) => p.categoria === "✨ Catálogo Completo" && p.disponible_hoy
+);
+
+function buildWhatsAppLink(productName: string): string {
+  const message = encodeURIComponent(
+    `Hola! Me interesa comprar: ${productName}. ¿Está disponible?`
+  );
+  return `https://wa.me/${whatsapp}?text=${message}`;
+}
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content={seoDescription}
+    />
+    <meta name="theme-color" content="#f59e0b" />
+    <link rel="icon" type="image/jpeg" href="/images/Logo.jpeg" />
+    <title>{tituloHero} — Catálogo Digital</title>
+  </head>
+
+  <body class="min-h-screen bg-stone-50 text-neutral-950 antialiased">
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- HERO SECTION                                     -->
+    <!-- ════════════════════════════════════════════════ -->
+    <header
+      id="hero"
+      class="relative overflow-hidden bg-stone-50 py-24 border-b border-stone-200"
+    >
+      <div
+        class="relative mx-auto flex max-w-lg flex-col items-center justify-center px-6 text-center"
+      >
+        <!-- Category/Badge above logo -->
+        <span class="animate-fade-in-up text-[10px] font-bold tracking-[0.3em] text-neutral-400 uppercase mb-4">Colección Exclusiva</span>
+
+        <!-- Logo/Icon -->
+        <div
+          class="animate-float mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-neutral-950 text-2xl shadow-md"
+        >
+          🛍️
+        </div>
+
+        <!-- Título principal -->
+        <h1
+          class="animate-fade-in-up font-serif text-3xl sm:text-4xl font-light tracking-widest text-neutral-950 uppercase mb-4"
+        >
+          {tituloHero}
+        </h1>
+
+        <!-- Fino separador horizontal -->
+        <div class="w-12 h-[1px] bg-neutral-900 my-6 animate-fade-in-up"></div>
+
+        <!-- Subtítulo -->
+        <p
+          class="animate-fade-in-up-delay mb-8 font-sans font-light text-xs tracking-wide text-neutral-500 max-w-xs leading-relaxed"
+          set:html={subtituloHero.replace(/\n/g, "<br />")}
+        />
+
+        <!-- CTA Button -->
+        <a
+          id="hero-cta"
+          href="#menu"
+          class="animate-fade-in-up-delay inline-flex items-center gap-2 rounded-full border border-neutral-950 bg-neutral-950 text-white hover:bg-transparent hover:text-neutral-950 text-[10px] font-semibold uppercase tracking-widest px-8 py-3.5 transition-all duration-300"
+        >
+          <span>Ver Catálogo</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </a>
+      </div>
+    </header>
+
+    <main id="menu" class="mx-auto max-w-lg px-4 pb-24">
+      <!-- ════════════════════════════════════════════════ -->
+      <!-- SECCIÓN: 🔥 ¡LO MÁS VENDIDO!                      -->
+      <!-- ════════════════════════════════════════════════ -->
+      <section id="mas-vendido" class="py-12 border-b border-stone-200/60">
+        <div class="mb-10 text-center">
+          <span class="text-[10px] font-bold tracking-[0.3em] text-neutral-400 uppercase">Tendencias</span>
+          <h2 class="font-serif text-2xl font-normal tracking-widest text-neutral-950 uppercase mt-1">
+            ¡Lo Más Vendido!
+          </h2>
+          <div class="w-8 h-[1px] bg-stone-300 mx-auto mt-4"></div>
+        </div>
+
+        {
+          masVendido.length > 0 ? (
+            <div class="grid grid-cols-2 gap-x-4 gap-y-8">
+              {masVendido.map((producto) => (
+                <article
+                  class="group relative flex flex-col justify-between overflow-hidden bg-transparent"
+                >
+                  <div class="flex flex-col">
+                    {/* Product Image Container */}
+                    <div class="relative aspect-[3/4] w-full overflow-hidden rounded-lg bg-stone-100 border border-stone-200/50 shadow-sm flex items-center justify-center transition-all duration-300 group-hover:shadow-md group-hover:border-stone-300">
+                      {producto.imagen ? (
+                        <img
+                          src={producto.imagen}
+                          alt={producto.nombre}
+                          class="product-zoomable-img h-full w-full object-cover cursor-zoom-in transition-transform duration-500 group-hover:scale-105"
+                          loading="lazy"
+                          data-zoom-src={producto.imagen}
+                          data-product-name={producto.nombre}
+                        />
+                      ) : (
+                        <div class="flex h-full w-full items-center justify-center text-4xl">
+                          🛍️
+                        </div>
+                      )}
+                      {/* Badge "Top" */}
+                      <span class="absolute right-2 top-2 rounded-md bg-neutral-950 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-widest text-white shadow-sm">
+                        Top
+                      </span>
+                    </div>
+
+                    {/* Product Info below image */}
+                    <h3 class="truncate font-serif text-sm font-semibold tracking-wide text-neutral-900 uppercase mt-3">
+                      {producto.nombre}
+                    </h3>
+                    <p class="text-xs font-bold text-amber-800 mt-1">
+                      {producto.precio}
+                    </p>
+                  </div>
+
+                  {/* Action Button */}
+                  <a
+                    href={buildWhatsAppLink(producto.nombre)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-neutral-950 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-white shadow-sm transition-all duration-200 hover:bg-neutral-800 active:scale-95 mt-3"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-3.5 w-3.5"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                    <span>Pedir por WhatsApp</span>
+                  </a>
+                </article>
+              ))}
+            </div>
+          ) : (
+            /* ── Banner Placeholder ── */
+            <div
+              id="no-asados-banner"
+              class="rounded-xl border border-dashed border-stone-200 bg-stone-50 p-6 text-center"
+            >
+              <span class="mb-3 block text-4xl">🛍️</span>
+              <p class="mb-1 text-sm font-bold text-neutral-900 uppercase tracking-wider">
+                No hay productos destacados
+              </p>
+              <p class="text-xs text-stone-500 mb-4">
+                ¡Pregúntanos por WhatsApp sobre nuestras próximas novedades!
+              </p>
+              <a
+                href={`https://wa.me/${whatsapp}?text=${encodeURIComponent("Hola! ¿Qué productos nuevos tienen disponibles?")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 rounded-full bg-neutral-950 px-4 py-2 text-[11px] font-semibold uppercase tracking-wider text-white shadow-sm transition-all duration-200 hover:bg-neutral-800 active:scale-95"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3.5 w-3.5"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                </svg>
+                <span>Preguntar</span>
+              </a>
+            </div>
+          )
+        }
+      </section>
+
+      <!-- ════════════════════════════════════════════════ -->
+      <!-- SECCIÓN: ✨ CATÁLOGO COMPLETO                    -->
+      <!-- ════════════════════════════════════════════════ -->
+      <section id="productos-fijos" class="py-12 border-b border-stone-200/60">
+        <div class="mb-10 text-center">
+          <span class="text-[10px] font-bold tracking-[0.3em] text-neutral-400 uppercase">Esenciales</span>
+          <h2 class="font-serif text-2xl font-normal tracking-widest text-neutral-950 uppercase mt-1">
+            Catálogo Completo
+          </h2>
+          <div class="w-8 h-[1px] bg-stone-300 mx-auto mt-4"></div>
+        </div>
+
+        {
+          catalogoCompleto.length > 0 ? (
+            <div class="grid grid-cols-2 gap-x-4 gap-y-8">
+              {catalogoCompleto.map((producto) => (
+                <article class="group relative flex flex-col justify-between overflow-hidden bg-transparent">
+                  <div class="flex flex-col">
+                    {/* Product Image Container */}
+                    <div class="relative aspect-[3/4] w-full overflow-hidden rounded-lg bg-stone-100 border border-stone-200/50 shadow-sm flex items-center justify-center transition-all duration-300 group-hover:shadow-md group-hover:border-stone-300">
+                      {producto.imagen ? (
+                        <img
+                          src={producto.imagen}
+                          alt={producto.nombre}
+                          class="product-zoomable-img h-full w-full object-cover cursor-zoom-in transition-transform duration-500 group-hover:scale-105"
+                          loading="lazy"
+                          data-zoom-src={producto.imagen}
+                          data-product-name={producto.nombre}
+                        />
+                      ) : (
+                        <div class="flex h-full w-full items-center justify-center text-4xl">
+                          👕
+                        </div>
+                      )}
+                      {/* Badge "Catálogo" */}
+                      <span class="absolute right-2 top-2 rounded-md bg-stone-200/90 border border-stone-300 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-widest text-neutral-800 shadow-sm">
+                        Catálogo
+                      </span>
+                    </div>
+
+                    {/* Product Info below image */}
+                    <h3 class="truncate font-serif text-sm font-semibold tracking-wide text-neutral-900 uppercase mt-3">
+                      {producto.nombre}
+                    </h3>
+                    <p class="text-xs font-bold text-amber-800 mt-1">
+                      {producto.precio}
+                    </p>
+                  </div>
+
+                  {/* Action Button */}
+                  <a
+                    href={buildWhatsAppLink(producto.nombre)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-neutral-950 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-white shadow-sm transition-all duration-200 hover:bg-neutral-800 active:scale-95 mt-3"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-3.5 w-3.5"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                    <span>Pedir por WhatsApp</span>
+                  </a>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div class="rounded-xl border border-dashed border-stone-200 bg-stone-50 p-6 text-center">
+              <p class="text-stone-500 text-xs">
+                No hay productos disponibles en el catálogo en este momento.
+              </p>
+            </div>
+          )
+        }
+      </section>
+
+      <!-- ════════════════════════════════════════════════ -->
+      <!-- SECCIÓN: PUNTOS DE VENTA 📍                     -->
+      <!-- ════════════════════════════════════════════════ -->
+      <section id="ubicaciones" class="py-12 border-b border-stone-200/60">
+        <div class="mb-10 text-center">
+          <span class="text-[10px] font-bold tracking-[0.3em] text-neutral-400 uppercase">Visítanos</span>
+          <h2 class="font-serif text-2xl font-normal tracking-widest text-neutral-950 uppercase mt-1">
+            Nuestras Tiendas
+          </h2>
+          <div class="w-8 h-[1px] bg-stone-300 mx-auto mt-4"></div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          {
+            puntosVenta.map((punto) => (
+              <article class="flex flex-col justify-between rounded-lg bg-white p-6 border border-stone-200/80 shadow-sm transition-all duration-300 hover:shadow-md hover:border-stone-300">
+                <div>
+                  <h3 class="mb-2 font-serif text-base font-semibold tracking-wide text-neutral-900 uppercase">
+                    {punto.nombre}
+                  </h3>
+                  <p class="mb-5 font-sans text-xs leading-relaxed text-stone-500">
+                    {punto.direccion}
+                  </p>
+                </div>
+                <a
+                  href={punto.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex w-full items-center justify-center gap-2 rounded-full bg-stone-100 hover:bg-neutral-950 hover:text-white px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-neutral-900 border border-stone-200/60 shadow-sm transition-all duration-300 active:scale-95"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-3.5 w-3.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                  <span>Abrir en Maps</span>
+                </a>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+    </main>
+
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- FOOTER / CONTACTO                                -->
+    <!-- ════════════════════════════════════════════════ -->
+    <footer
+      id="contacto"
+      class="border-t border-stone-200 bg-white"
+    >
+      <div class="mx-auto max-w-lg px-6 py-12 text-center">
+        <h2 class="mb-2 font-serif text-lg font-normal tracking-wider text-neutral-950 uppercase">
+          ¿Viste algo que te gusta? 🛍️
+        </h2>
+        <p class="mb-8 font-sans text-xs tracking-wide text-stone-500">
+          Escríbenos o visítanos en nuestras redes sociales
+        </p>
+
+        <!-- Social Links -->
+        <div class="flex items-center justify-center gap-6">
+          <!-- WhatsApp -->
+          <a
+            id="footer-whatsapp"
+            href={`https://wa.me/${whatsapp}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-stone-50 border border-stone-200 text-stone-700 hover:bg-neutral-950 hover:text-white transition-all duration-300 active:scale-95"
+            aria-label="WhatsApp"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+              ></path>
+            </svg>
+          </a>
+
+          <!-- Facebook -->
+          <a
+            id="footer-facebook"
+            href={facebook}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-stone-50 border border-stone-200 text-stone-700 hover:bg-neutral-950 hover:text-white transition-all duration-300 active:scale-95"
+            aria-label="Facebook"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path
+                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+              ></path>
+            </svg>
+          </a>
+
+          <!-- Instagram -->
+          <a
+            id="footer-instagram"
+            href={instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-stone-50 border border-stone-200 text-stone-700 hover:bg-neutral-950 hover:text-white transition-all duration-300 active:scale-95"
+            aria-label="Instagram"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Copyright -->
+        <p class="mt-8 font-sans text-[10px] tracking-wide text-stone-400">
+          © {new Date().getFullYear()} {tituloHero}. Todos los derechos reservados.
+        </p>
+      </div>
+    </footer>
+
+
+
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- LIGHTBOX MODAL (ZOOM DE IMAGEN)                  -->
+    <!-- ════════════════════════════════════════════════ -->
+    <div
+      id="image-lightbox"
+      class="fixed inset-0 z-[100] flex hidden items-center justify-center bg-black/85 p-4 opacity-0 transition-opacity duration-300 backdrop-blur-sm"
+    >
+      <!-- Botón cerrar -->
+      <button
+        id="close-lightbox"
+        class="absolute top-4 right-4 z-[110] flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-white transition-all duration-200 hover:bg-white/30 hover:scale-110 active:scale-95"
+        aria-label="Cerrar vista ampliada"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+
+      <!-- Contenedor imagen -->
+      <div
+        id="lightbox-content"
+        class="relative max-h-[90vh] max-w-[95vw] overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10 transition-transform duration-300 scale-90"
+      >
+        <img
+          id="lightbox-img"
+          src=""
+          alt=""
+          class="block max-h-[80vh] max-w-[90vw] object-contain"
+        />
+        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent px-6 py-5 text-white">
+          <h3 id="lightbox-title" class="text-lg font-bold drop-shadow"></h3>
+          <p class="text-sm text-white/70 mt-0.5">Toca fuera de la imagen para cerrar</p>
+        </div>
+      </div>
+    </div>
+
+    <script is:inline>
+      document.addEventListener("DOMContentLoaded", function () {
+        var lightbox = document.getElementById("image-lightbox");
+        var lightboxContent = document.getElementById("lightbox-content");
+        var lightboxImg = document.getElementById("lightbox-img");
+        var lightboxTitle = document.getElementById("lightbox-title");
+        var closeBtn = document.getElementById("close-lightbox");
+        var zoomableImgs = document.querySelectorAll(".product-zoomable-img");
+
+        function openLightbox(src, title) {
+          if (!lightbox || !lightboxImg || !lightboxTitle || !lightboxContent) return;
+
+          lightboxImg.src = src;
+          lightboxImg.alt = title;
+          lightboxTitle.textContent = title;
+
+          lightbox.classList.remove("hidden");
+          void lightbox.offsetWidth; // reflow para activar transición
+          lightbox.classList.add("opacity-100");
+          lightboxContent.classList.remove("scale-90");
+          lightboxContent.classList.add("scale-100");
+
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeLightbox() {
+          if (!lightbox || !lightboxContent) return;
+
+          lightbox.classList.remove("opacity-100");
+          lightboxContent.classList.remove("scale-100");
+          lightboxContent.classList.add("scale-90");
+
+          setTimeout(function () {
+            lightbox.classList.add("hidden");
+            document.body.style.overflow = "";
+          }, 300);
+        }
+
+        // Click en imágenes de producto
+        zoomableImgs.forEach(function (img) {
+          img.addEventListener("click", function (e) {
+            var zoomSrc = e.currentTarget.getAttribute("data-zoom-src");
+            var title = e.currentTarget.getAttribute("data-product-name") || "";
+            if (zoomSrc) {
+              openLightbox(zoomSrc, title);
+            }
+          });
+        });
+
+        // Botón cerrar
+        if (closeBtn) {
+          closeBtn.addEventListener("click", closeLightbox);
+        }
+
+        // Click en el fondo oscuro (fuera de la imagen)
+        if (lightbox) {
+          lightbox.addEventListener("click", function (e) {
+            if (e.target === lightbox) {
+              closeLightbox();
+            }
+          });
+        }
+
+        // Tecla ESC
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && lightbox && !lightbox.classList.contains("hidden")) {
+            closeLightbox();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
