@@ -1,6 +1,7 @@
 import { defineConfig } from "tinacms";
 
 export default defineConfig({
+  branch: "main",
   // ── Configuración local (sin Tina Cloud) ──
   clientId: "local",
   token: "local",
