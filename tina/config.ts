@@ -1,10 +1,11 @@
 import { defineConfig } from "tinacms";
 
+declare const process: any;
+
 export default defineConfig({
   branch: "main",
-  // ── Configuración local (sin Tina Cloud) ──
-  clientId: "local",
-  token: "local",
+  clientId: process.env.TINA_PUBLIC_CLIENT_ID || process.env.NEXT_PUBLIC_TINA_CLIENT_ID || null,
+  token: process.env.TINA_TOKEN || null,
 
   build: {
     outputFolder: "admin",
